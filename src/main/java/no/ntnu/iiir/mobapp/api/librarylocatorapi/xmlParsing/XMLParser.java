@@ -2,32 +2,22 @@ package no.ntnu.iiir.mobapp.api.librarylocatorapi.xmlParsing;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import javax.xml.crypto.dsig.TransformException;
 import javax.xml.parsers.*;
 import java.io.*;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class XMLParser {
 
-    JSONArray bookdetail = new JSONArray();
+
+    static JSONArray bookdetail = new JSONArray();
 
     public XMLParser() {
 
@@ -37,12 +27,12 @@ public class XMLParser {
         XMLParser parser = new XMLParser();
         String isbn = "978-82-489-2327-5";
         String newHei = "978-82-7900-843-9";
-        parser.parseXML("47BIBSYS_NTNU_UB", newHei);
+        bookdetail.put(parser.parseXML("47BIBSYS_NTNU_UB", newHei));
     }
 
-    private JSONArray parseXML(String librarySystem, String isbn) {
+    public static JSONObject parseXML(String librarySystem, String isbn) {
+        JSONObject book = new JSONObject();
         try {
-            JSONObject book = new JSONObject();
             String title = "";
             String author = "";
             String summary = "";
@@ -108,13 +98,11 @@ public class XMLParser {
             book.put("Author",author);
             book.put("Summary",summary);
             book.put("Image",image);
-            bookdetail.put(book);
 
         } catch (IOException | ParserConfigurationException | SAXException  | JSONException e) {
             System.out.println(e.getMessage());
         }
-
-        return bookdetail;
+        return book;
     }
 
 }
