@@ -1,19 +1,35 @@
 package no.ntnu.iiir.mobapp.api.librarylocatorapi.repository;
 
-import java.util.List;
 import no.ntnu.iiir.mobapp.api.librarylocatorapi.model.Book;
-import org.springframework.data.jpa.repository.JpaRepository;
+import no.ntnu.iiir.mobapp.api.librarylocatorapi.xmlParsing.XMLParser;
+import org.json.JSONArray;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Repository
-public interface BookRepository extends JpaRepository<Book, Long> {
+public class BookRepository{
+	@Autowired
+	private NamedParameterJdbcTemplate jdbcTemplate;
 
-  Book findById(long id);
+	 public JSONArray getAllBooks(){
+		 List<Book> books = new ArrayList<>();
+		 JSONArray result = new JSONArray();
 
-  List<Book> findByIsbn(String isbn);
 
-  List<Book> findByAuthor(String author);
+		 var sql = "select * from books";
 
-  List<Book> findByTitle(String title);
+		 books = jdbcTemplate.query(sql,
+				 (rs, rowNum) -> new Book(rs.getLong("id"), rs.getString("bookisbn"))
+		 );
+		 for(int i =0; i<books.size(); i++){
+			result.put(XMLParser.parseXML("47BIBSYS_NTNU_UB",books.get(i).getIsbn()));
+		 }
 
+
+		 return result;
+	 }
 }
