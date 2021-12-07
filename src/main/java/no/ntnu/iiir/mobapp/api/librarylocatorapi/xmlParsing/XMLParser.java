@@ -23,11 +23,16 @@ public class XMLParser {
 
     }
 
-    public static void main(String args[]) {
+    public static void main(String args[]) throws JSONException {
         XMLParser parser = new XMLParser();
         String isbn = "978-82-489-2327-5";
-        String newHei = "978-82-7900-843-9";
+        String newHei = "9788202392840";
         bookdetail.put(parser.parseXML("47BIBSYS_NTNU_UB", newHei));
+
+        for (int i = 0; i <bookdetail.length(); i++) {
+            System.out.println(bookdetail.get(i));
+        }
+
     }
 
     public static JSONObject parseXML(String librarySystem, String isbn) {
@@ -79,15 +84,17 @@ public class XMLParser {
                     }
                 }
                 //Get Image
-                if (datafieldnode.getAttributes().item(2).getNodeValue().equals("856") && datafieldnode.getAttributes().item(1).getNodeValue().equals("1")){
+                if (datafieldnode.getAttributes().item(2).getNodeValue().equals("856") && datafieldnode.getAttributes().item(1).getNodeValue().equals("2")){
                     for(int i = 0; i < subfieldnl.getLength(); i++){
                         Node subfieldnode = subfieldnl.item(i);
                         Element subfieldelement = (Element) subfieldnode;
+                        String subfieldname =  subfieldelement.getFirstChild().getNodeValue();
                         String subfieldCode = String.valueOf(subfieldnode.getAttributes().item(0).getNodeValue());
-                        if (subfieldCode.equals("u")){
-                            if(image.isEmpty()){
-                                image = subfieldelement.getTextContent();
-                            }
+                            if(subfieldCode.equals("u") && subfieldname.contains("/images/")){
+                                if(image.isEmpty()){
+                                    image = subfieldelement.getTextContent();
+                                }
+
                         }
                     }
                 }

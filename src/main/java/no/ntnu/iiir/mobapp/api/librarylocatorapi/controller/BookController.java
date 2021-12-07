@@ -5,11 +5,11 @@ import no.ntnu.iiir.mobapp.api.librarylocatorapi.repository.BookRepository;
 import no.ntnu.iiir.mobapp.api.librarylocatorapi.xmlParsing.XMLParser;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -26,15 +26,6 @@ public class BookController{
 		JSONArray book = new JSONArray();
 		book.put(XMLParser.parseXML("47BIBSYS_NTNU_UB",requestBody));
 		return book;
-	}
-
-	@GetMapping(path = "/getAllBooks", headers = "Accept=application/json; charset=UTF-8")
-	@ResponseBody
-	public String getAllBooks() throws JSONException {
-		JSONArray books = new JSONArray();
-		books = bookRepository.getAllBooks();
-
-		return books.toString();
 	}
 
 }
