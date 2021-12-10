@@ -4,7 +4,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import javax.xml.parsers.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
+import no.ntnu.iiir.mobapp.api.librarylocatorapi.model.Book;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,8 +38,8 @@ public class XMLParser {
 
     }
 
-    public static JSONObject parseXML(String librarySystem, String isbn) {
-        JSONObject book = new JSONObject();
+    public static Book parseXML(String librarySystem, String isbn) {
+        Book book = null;
         try {
             String title = "";
             String author = "";
@@ -101,15 +104,10 @@ public class XMLParser {
 
 
             }
-            book.put("Title",title);
-            book.put("Author",author);
-            book.put("Summary",summary);
-            book.put("Image",image);
-
-        } catch (IOException | ParserConfigurationException | SAXException  | JSONException e) {
+            book = new Book(isbn,title,author,summary,image);
+        } catch (IOException | ParserConfigurationException | SAXException e) {
             System.out.println(e.getMessage());
         }
         return book;
     }
-
 }
