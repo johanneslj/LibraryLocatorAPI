@@ -2,9 +2,6 @@ package no.ntnu.iiir.mobapp.api.librarylocatorapi.repository;
 
 import no.ntnu.iiir.mobapp.api.librarylocatorapi.model.Book;
 import no.ntnu.iiir.mobapp.api.librarylocatorapi.xmlParsing.XMLParser;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;

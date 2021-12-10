@@ -4,13 +4,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import javax.xml.parsers.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 import no.ntnu.iiir.mobapp.api.librarylocatorapi.model.Book;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -29,7 +26,7 @@ public class XMLParser {
     public static void main(String args[]) throws JSONException {
         XMLParser parser = new XMLParser();
         String isbn = "978-82-489-2327-5";
-        String newHei = "9788202392840";
+        String newHei = "9781852330897";
         bookdetail.put(parser.parseXML("47BIBSYS_NTNU_UB", newHei));
 
         for (int i = 0; i <bookdetail.length(); i++) {
@@ -70,7 +67,11 @@ public class XMLParser {
                             title += subfieldelement.getTextContent();
                         }
                         if (subfieldCode.equals("c")){
-                            author = subfieldelement.getTextContent();
+                            author = subfieldelement.getTextContent().split(";")[0];
+                            if(author.startsWith("av ")){
+                                author = author.substring(3,author.length());
+                            }
+
                         }
                     }
                 }
