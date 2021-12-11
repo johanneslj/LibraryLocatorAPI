@@ -19,8 +19,6 @@ public class LibraryLocatorApiApplication extends SpringBootServletInitializer {
 	@Autowired
 	BookRepository bookRepository;
 
-
-
 	public static void main(String[] args) {
 		SpringApplication.run(LibraryLocatorApiApplication.class, args);
 	}
