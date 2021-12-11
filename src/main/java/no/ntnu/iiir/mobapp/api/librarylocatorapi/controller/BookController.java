@@ -1,6 +1,8 @@
 package no.ntnu.iiir.mobapp.api.librarylocatorapi.controller;
 
 
+import java.util.Collection;
+import java.util.HashMap;
 import no.ntnu.iiir.mobapp.api.librarylocatorapi.model.Book;
 import no.ntnu.iiir.mobapp.api.librarylocatorapi.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,68 @@ public class BookController{
 		Map<String,Book> books;
 		books = bookRepository.getAllBooks();
 		return books;
+	}
+
+	/**
+	 * Gets search result from API, searching for author, title, and ISBN.
+	 * @param query search query
+	 * @return search result
+	 */
+	@GetMapping(path = "/search={query}")
+	@ResponseBody
+	public Map<String, Book> search(@PathVariable(value = "query") String query) {
+		HashMap<String, Book> result = new HashMap<>();
+
+		Book isbnBook = findBooksByIsbn(query);
+
+		result.putAll(searchForBooksByAuthor(query));
+		result.putAll(searchForBooksByTitle(query));
+
+		if (isbnBook != null) {
+			result.put(isbnBook.getIsbn(), isbnBook);
+		}
+
+		return result;
+	}
+
+	/**
+	 * Gets books which contain the query string in the title.
+	 * @param query search query
+	 * @return search result
+	 */
+	private Map<String, Book> searchForBooksByTitle(String query) {
+		HashMap<String, Book> result = new HashMap<String, Book>();
+		Collection<Book> allBooks = bookRepository.getAllBooks().values();
+
+		for (Book book : allBooks) {
+			if (book.getTitle().contains(query)) {
+				result.put(book.getTitle(), book);
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * Searches for books where the author contains query
+	 * @param query Search query
+	 * @return List of books containing query in author
+	 */
+	private Map<String, Book> searchForBooksByAuthor(String query) {
+		HashMap<String, Book> result = new HashMap<String, Book>();
+		Collection<Book> allBooks = bookRepository.getAllBooks().values();
+
+		for (Book book : allBooks) {
+			if (book.getAuthor().contains(query)) {
+				result.put(book.getTitle(), book);
+			}
+		}
+
+		return result;
+	}
+
+	private Book findBooksByIsbn(String isbn) {
+		return bookRepository.getAllBooks().get(isbn);
 	}
 
 	@RequestMapping("/message")
